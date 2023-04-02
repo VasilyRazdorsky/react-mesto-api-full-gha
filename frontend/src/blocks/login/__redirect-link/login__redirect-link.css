@@ -1,0 +1,17 @@
+.login__redirect-link {
+    display: inline-block;
+    margin: 0 auto;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    opacity: 1;
+    transition: opacity ease-in .2s;
+}
+
+.login__redirect-link:hover {
+    opacity: 0.6;
+    cursor: pointer ;
+}
