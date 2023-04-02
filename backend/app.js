@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errors, celebrate, Joi } = require('celebrate');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
@@ -17,6 +18,8 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+
+app.use(requestLogger);
 
 // роуты, не требующие авторизации
 app.post('/signin', celebrate({
@@ -46,6 +49,8 @@ app.use('*', (req, res, next) => {
   const err = new NotFoundError(errorTexts.incorrectRouteError);
   next(err);
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
