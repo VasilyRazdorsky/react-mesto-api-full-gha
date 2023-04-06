@@ -24,12 +24,20 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 
 // роуты, не требующие авторизации
+app.post('/signin', cors({ origin: '<https://mesto.vrazdorsky.nomoredomains.monster>', credentials: true }), celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+}), login);
+/*
 app.post('/signin', cors(), celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 }), login);
+*/
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
