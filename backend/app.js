@@ -17,7 +17,19 @@ const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'https://mesto.vrazdorsky.nomoredomains.monster',
+    'http://localhost:3001',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization', 'Accept', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Origin'],
+};
+
+app.use(helmet());
+app.use('*', cors(corsOptions));
 
 app.use(bodyParser.json());
 
