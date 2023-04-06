@@ -3,7 +3,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { handleCors } = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errors, celebrate, Joi } = require('celebrate');
 const bodyParser = require('body-parser');
@@ -19,7 +18,6 @@ const { PORT = 3001 } = process.env;
 const app = express();
 
 app.use(cors());
-app.use(handleCors);
 
 app.use(bodyParser.json());
 
