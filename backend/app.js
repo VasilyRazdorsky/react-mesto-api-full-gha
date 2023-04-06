@@ -19,9 +19,9 @@ const app = express();
 
 app.use(cors());
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 
-//app.use(requestLogger);
+app.use(requestLogger);
 
 // роуты, не требующие авторизации
 app.post('/signin', cors(), celebrate({
