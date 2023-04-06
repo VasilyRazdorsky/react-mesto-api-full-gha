@@ -1,8 +1,8 @@
-require('dotenv').config();
+//require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
-//const cors = require('cors');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errors, celebrate, Joi } = require('celebrate');
 const bodyParser = require('body-parser');
@@ -13,18 +13,18 @@ const auth = require('./middlewares/auth');
 const { urlPattern, errorTexts } = require('./constants');
 const NotFoundError = require('./errors/NotFoundError');
 
-const { PORT = 3001 } = process.env;
+//const { PORT = 3001 } = process.env;
 
 const app = express();
 
-//app.use(cors());
+app.use(cors());
 
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
-app.use(requestLogger);
+//app.use(requestLogger);
 
 // роуты, не требующие авторизации
-app.post('/signin', celebrate({
+app.post('/signin', cors(), celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -69,5 +69,5 @@ app.use((err, req, res, next) => {
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
 }, () => {
-  app.listen(PORT);
+  app.listen(3001);
 });
