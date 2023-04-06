@@ -13,43 +13,23 @@ const auth = require('./middlewares/auth');
 const { urlPattern, errorTexts } = require('./constants');
 const NotFoundError = require('./errors/NotFoundError');
 
-//const { PORT = 3001 } = process.env;
+const { PORT = 3001 } = process.env;
 
 const app = express();
 
-const corsOptions = {
-  origin: [
-    'https://mesto.vrazdorsky.nomoredomains.monster',
-    'http://localhost:3001',
-  ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization', 'Accept', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Origin'],
-};
-
-app.use(helmet());
-app.use('*', cors(corsOptions));
+app.use(cors())
 
 app.use(bodyParser.json());
 
 app.use(requestLogger);
 
 // роуты, не требующие авторизации
-app.post('/signin', cors({ origin: '<https://mesto.vrazdorsky.nomoredomains.monster>', credentials: true }), celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), login);
-/*
 app.post('/signin', cors(), celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 }), login);
-*/
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -89,5 +69,5 @@ app.use((err, req, res, next) => {
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
 }, () => {
-  app.listen(3001);
+  app.listen(PORT);
 });
