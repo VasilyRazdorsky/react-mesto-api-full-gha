@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 //const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('../models/user');
-const { errorTexts, httpAnswerCodes } = require('../constants');
+const { errorTexts, httpAnswerCodes, JWT_SECRET } = require('../constants');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const IncorrectAuthorisationError = require('../errors/IncorrectAuthorisationError');
@@ -98,7 +98,7 @@ const login = async (req, res, next) => {
         });
     })
     .then((user) => {
-      const jwt = jsonwebtoken.sign({ _id: user._id }, 'dev_secret', { expiresIn: '7d' });
+      const jwt = jsonwebtoken.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
       res
         .status(httpAnswerCodes.validOperationCode)
