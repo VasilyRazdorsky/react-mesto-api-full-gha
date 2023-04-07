@@ -1,12 +1,13 @@
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('../models/user');
 const { errorTexts, httpAnswerCodes } = require('../constants');
 const NotFoundError = require('../errors/NotFoundError');
-const ValidationError = require('../errors/ValidationError');
 const IncorrectAuthorisationError = require('../errors/IncorrectAuthorisationError');
 const IncorrectDataError = require('../errors/IncorrectDataError');
+const AlreadyRegisteredError= require('../errors/AlreadyRegisteredError');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -69,10 +70,9 @@ const createUser = (req, res, next) => {
     .catch((error) => {
       let err = error;
       if (error.name === 'ValidationError') {
-        err = new ValidationError(errorTexts.incorrectData);
+        err = new IncorrectDataError(errorTexts.incorrectData);
       } else if (error.code === 11000) {
-        err = new Error(errorTexts.alreadyRegisteredError);
-        err.statusCode = httpAnswerCodes.duplicateErrorCode;
+        err = new AlreadyRegisteredError(errorTexts.alreadyRegisteredError);
       }
       next(err);
     });
@@ -98,11 +98,11 @@ const login = async (req, res, next) => {
         });
     })
     .then((user) => {
-      const jwt = jsonwebtoken.sign({ _id: user._id }, NODE_ENV ?  JWT_SECRET : 'dev_secret', { expiresIn: '7d' });
+      const jwt = jsonwebtoken.sign({ _id: user._id }, NODE_ENV ? JWT_SECRET : 'dev_secret', { expiresIn: '7d' });
 
       res
         .status(httpAnswerCodes.validOperationCode)
-        .send({ user, jwt });
+        .send({ jwt });
     })
     .catch((err) => {
       next(err);
@@ -131,7 +131,7 @@ const updateProfile = (req, res, next) => {
     .catch((error) => {
       let err = error;
       if (error.name === 'ValidationError') {
-        err = new ValidationError(errorTexts.incorrectData);
+        err = new new IncorrectDataError(errorTexts.incorrectData)();
       }
       next(err);
     });
@@ -159,7 +159,7 @@ const updateAvatar = (req, res, next) => {
     .catch((error) => {
       let err = error;
       if (error.name === 'ValidationError') {
-        err = new ValidationError(errorTexts.incorrectData);
+        err = new IncorrectDataError(errorTexts.incorrectData);
       }
       next(err);
     });

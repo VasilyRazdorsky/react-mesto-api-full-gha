@@ -3,8 +3,8 @@ const { errorTexts, httpAnswerCodes } = require('../constants');
 const NotFoundError = require('../errors/NotFoundError');
 const AccessError = require('../errors/AccessError');
 const IncorrectDataError = require('../errors/IncorrectDataError');
-const ValidationError = require('../errors/ValidationError');
 
+// eslint-disable-next-line consistent-return
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
@@ -12,9 +12,9 @@ const getCards = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  return null;
 };
 
+// eslint-disable-next-line consistent-return
 const createCard = async (req, res, next) => {
   try {
     const { name, link } = req.body;
@@ -25,13 +25,13 @@ const createCard = async (req, res, next) => {
   } catch (error) {
     let err = error;
     if (error.name === 'ValidationError') {
-      err = new ValidationError(errorTexts.incorrectData);
+      err = new IncorrectDataError(errorTexts.incorrectData);
     }
     next(err);
   }
-  return null;
 };
 
+// eslint-disable-next-line consistent-return
 const deleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);
@@ -52,9 +52,9 @@ const deleteCard = async (req, res, next) => {
     }
     next(error);
   }
-  return null;
 };
 
+// eslint-disable-next-line consistent-return
 const addLike = async (req, res, next) => {
   try {
     const { cardId } = req.params;
@@ -78,9 +78,9 @@ const addLike = async (req, res, next) => {
     }
     next(err);
   }
-  return null;
 };
 
+// eslint-disable-next-line consistent-return
 const deleteLike = async (req, res, next) => {
   try {
     const { cardId } = req.params;
@@ -104,7 +104,6 @@ const deleteLike = async (req, res, next) => {
     }
     next(err);
   }
-  return null;
 };
 
 module.exports = {
